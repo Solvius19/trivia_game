@@ -3,6 +3,7 @@ package org.example;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.base.BinaryTSFactory;
 
 import java.io.*;
 import java.net.*;
@@ -12,7 +13,7 @@ import java.util.*;
 public class BoardBuildEngine {
 
     private static int[] CATEGORY_IDS;
-    private static final int[] VALID_CATEGORY_IDS = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25};
+    private static final int[] VALID_CATEGORY_IDS = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32};
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static Question[][] BOARD = new Question[5][6];
 
@@ -49,7 +50,16 @@ public class BoardBuildEngine {
 
     private static int[] generateCategories() {
         // pick 6 unique random category IDs from VALID_CATEGORY_IDS
-        return new int[0];
+        int[] selected = new int[6];
+        for (int i = 0; i < 6; i++){
+            int rand = (int) (Math.random() * 23) + 9;
+            if (Arrays.stream(selected).anyMatch(x -> x == rand)) {
+                i--;
+                continue;
+            }
+            selected[i] = rand;
+        }
+        return selected;
     }
 
     private static void buildColumnFromJson(String json, int catId, int colIndex) {

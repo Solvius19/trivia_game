@@ -24,12 +24,12 @@ public class Question {
     public Question() {
     }
 
-    public Question(String s, String s1, String cat, String easy, int i) {
-        this.question = s;
-        this.answer = s1;
-        this.category = cat;
-        this.difficulty = easy;
-        this.value = i;
+    public Question(String question, String answer, String category, String difficulty, int value) {
+        this.question = question;
+        this.answer = answer;
+        this.category = category;
+        this.difficulty = difficulty;
+        this.value = value;
     }
 
     public int getValue() {

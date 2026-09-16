@@ -5,5 +5,6 @@ public class Main {
         EventHelper.setupGame();
         OutputUtil.clear();
         EventHelper.printBoard();
+        EventHelper.askQuestion(1, 1, new Player("Player 1"));
     }
 }

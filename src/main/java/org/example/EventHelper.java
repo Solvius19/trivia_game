@@ -47,5 +47,21 @@ public class EventHelper {
         }
     }
 
+    public static void askQuestion(int row, int col, Player player) {
+        Question question = board[row][col];
+        System.out.println("Category: " + question.getCategory());
+        System.out.println("Question: " + question.getQuestion());
+        System.out.print("Your answer: ");
+        String userAnswer = input.nextLine();
+
+        if (userAnswer.equalsIgnoreCase(question.getAnswer())) {
+            System.out.println("Correct!");
+            player.addScore(question.getValue());
+        } else {
+            System.out.println("Incorrect! The correct answer was: " + question.getAnswer());
+            player.subtractScore(question.getValue());
+        }
+    }
+
 
 }

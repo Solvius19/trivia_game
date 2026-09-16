@@ -10,4 +10,19 @@ public class Player {
         this.currentScore = 0;
     }
 
+    public void addScore(int value) {
+        this.currentScore += value;
+    }
+
+    public void subtractScore(int value) {
+        this.currentScore -= value;
+    }
+
+    public int getCurrentScore() {
+        return currentScore;
+    }
+
+    public String getName() {
+        return name;
+    }
 }

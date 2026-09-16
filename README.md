@@ -1,3 +1,1 @@
-# jeopardyGame
-# jeopardyGame
-# jeopardy
+# Jeopardy Style Game

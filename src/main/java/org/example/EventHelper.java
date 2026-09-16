@@ -8,6 +8,20 @@ public class EventHelper {
     private static Question[][] board = new Question[6][5];
     private static Scanner input = new Scanner(System.in);
 
+    public static void setupGame(){
+        board = BoardBuildEngine.buildBoard();
+        setupValues();
+        Player player = new Player("Player 1");
+    }
+
+    private static void setupValues() {
+        for (int row = 0; row < board.length; row++) {
+            for (int j = 0; j < board[0].length; j++) {
+                board[row][j].setValue((row + 1) * 100);
+            }
+        }
+    }
+
     public static Player onMenu(Player player) {
         while (true) {
             System.out.print(player +
@@ -24,6 +38,7 @@ public class EventHelper {
     }
 
     public static void printBoard() {
+        System.out.println();
         for (Question[] questions : board) {
             for (Question q : questions){
                 System.out.print("$" + q.getValue() + " | ");
@@ -31,15 +46,6 @@ public class EventHelper {
             System.out.println();
         }
     }
-
-//    public static void buildBoard(){
-//        List<Question> questions = QuestionAPI.createQuestion();
-//        for (int row = 0; row < board.length; row++){
-//            for (int col = 0; col < board[row].length; col++){
-//                board[row][col] = questions.get(row * board[row].length + col);
-//            }
-//        }
-//    }
 
 
 }

@@ -11,12 +11,15 @@ import java.util.*;
 
 public class BoardBuildEngine {
 
-    private static final int[] CATEGORY_IDS = {9, 10, 11, 12, 13, 14};
+    private static int[] CATEGORY_IDS;
+    private static final int[] VALID_CATEGORY_IDS = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25};
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static final Question[][] BOARD = new Question[5][6];
+    private static Question[][] BOARD = new Question[5][6];
 
 
-    public static void main(String[] args) {
+
+    public static Question[][] buildBoard() {
+        CATEGORY_IDS = generateCategories();
 
         System.out.println("=============================================");
         System.out.println("      INITIALIZING JEOPARDY TRIVIA BOARD     ");
@@ -41,12 +44,12 @@ public class BoardBuildEngine {
                 }
             }
         }
-        for (Question[] row : BOARD) {
-            for (Question q : row) {
-                System.out.printf("%-20s | ", q.getCategory());
-            }
-            System.out.println();
-        }
+        return BOARD;
+    }
+
+    private static int[] generateCategories() {
+        // pick 6 unique random category IDs from VALID_CATEGORY_IDS
+        return new int[0];
     }
 
     private static void buildColumnFromJson(String json, int catId, int colIndex) {

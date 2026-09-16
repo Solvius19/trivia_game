@@ -77,4 +77,8 @@ public class Question {
                 ", incorrectAnswers=" + incorrectAnswers +
                 '}';
     }
+
+    public void setValue(int i) {
+        this.value = i;
+    }
 }

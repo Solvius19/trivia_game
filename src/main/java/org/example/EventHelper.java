@@ -1,7 +1,6 @@
 package org.example;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class EventHelper {
@@ -13,6 +12,7 @@ public class EventHelper {
     private static Question[][] board = new Question[6][5];
     private static final Scanner input = new Scanner(System.in);
     private static final ArrayList<Player> players = new ArrayList<>();
+    private static int[] selectedQuestion = null;
 
     public static void setupGame(){
         board = BoardBuildEngine.buildBoard();
@@ -65,26 +65,49 @@ public class EventHelper {
             System.out.println("Choose an attack:");
             System.out.println("1. Block Out (-100 points)");
             System.out.println("2. Scramble (-200 points)");
+            System.out.println("3. Select Question (-300 points)");
+            System.out.println("4. Tax (-300 points)");
             int attackChoice = input.nextInt();
-            input.nextLine(); // Consume newline
-            if (attackChoice == 1) {
-                if (player.getCurrentScore() < 100) {
-                    System.out.println("Not enough points to use Block Out.");
-                    return null;
+            input.nextLine();
+            switch (attackChoice) {
+                case 1 -> {
+                    if (player.getCurrentScore() < 100) {
+                        System.out.println("Not enough points to use Block Out.");
+                        return null;
+                    }
+                    player.subtractScore(100);
+                    System.out.println("You chose Block Out.");
+                    return "blockout";
                 }
-                player.subtractScore(100);
-                System.out.println("You chose Block Out.");
-                return "blockout";
-            } else if (attackChoice == 2) {
-                if (player.getCurrentScore() < 200) {
-                    System.out.println("Not enough points to use Scramble.");
-                    return null;
+                case 2 -> {
+                    if (player.getCurrentScore() < 200) {
+                        System.out.println("Not enough points to use Scramble.");
+                        return null;
+                    }
+                    player.subtractScore(200);
+                    System.out.println("You chose Scramble.");
+                    return "scramble";
                 }
-                player.subtractScore(200);
-                System.out.println("You chose Scramble.");
-                return "scramble";
-            } else {
-                System.out.println("Invalid choice. No attack used.");
+                case 3 -> {
+                    if (player.getCurrentScore() < 300) {
+                        System.out.println("Not enough points to use Select Question.");
+                        return null;
+                    }
+                    player.subtractScore(300);
+                    System.out.println("You chose Select Question.");
+                    selectedQuestion = Attack.blinded();
+                    return "selectQuestion";
+                }
+                case 4 -> {
+                    if (player.getCurrentScore() < 300) {
+                        System.out.println("Not enough points to use Tax.");
+                        return null;
+                    }
+                    player.subtractScore(300);
+                    System.out.println("You chose Tax.");
+                    return "tax";
+                }
+                default -> System.out.println("Invalid choice. No attack used.");
             }
         }
         OutputUtil.clear();
@@ -105,13 +128,27 @@ public class EventHelper {
     private static void doTurn(Player player, String attack) {
         System.out.println(player.getName() + "'s turn. Current score: " + player.getCurrentScore());
         printBoard();
-        System.out.print("Enter row (1-6) and column (1-5) of the question you want to answer (e.g., 2 3): ");
-        int row = input.nextInt() - 1;
-        int col = input.nextInt() - 1;
-        input.nextLine(); // Consume newline
-        if (row < 0 || row >= board.length || col < 0 || col >= board[0].length || board[row][col] == null) {
-            System.out.println("Invalid choice. Please choose again.");
-            return;
+
+        int row;
+        int col;
+        while (true) {
+            if (selectedQuestion != null) {
+                row = selectedQuestion[0];
+                col = selectedQuestion[1];
+                System.out.println("The previous player selected: Row " + (row + 1) + ", Column " + (col + 1));
+                selectedQuestion = null;
+            } else {
+                System.out.print("Enter row (1-6) and column (1-5) of the question you want to answer (e.g., 2 3): ");
+                row = input.nextInt() - 1;
+                col = input.nextInt() - 1;
+                input.nextLine();
+            }
+
+            if (row < 0 || row >= board.length || col < 0 || col >= board[0].length || board[row][col] == null) {
+                System.out.println("Invalid choice. Please choose again.");
+            } else {
+                break;
+            }
         }
         askQuestion(row, col, player, attack);
         OutputUtil.enterToClear();
@@ -140,16 +177,41 @@ public class EventHelper {
 
         if (userAnswer.equalsIgnoreCase(question.getAnswer())) {
             System.out.println("Correct!");
-            player.addScore(question.getValue());
+            if (isTax(attack)) {
+                Attack.tax(true, player, getPreviousPlayer(player), question.getValue());
+            }
+            else {
+                player.addScore(question.getValue());
+            }
         } else {
             System.out.println("Incorrect! The correct answer was: " + question.getAnswer());
-            player.subtractScore(question.getValue());
+            if (isTax(attack)) {
+                Attack.tax(false, player, getPreviousPlayer(player), question.getValue());
+            }
+            else {
+                player.subtractScore(question.getValue());
+            }
         }
-        board[row][col] = null; // Mark the question as answered
+        board[row][col] = null;
     }
+
+    private static Player getPreviousPlayer(Player player) {
+        int currentIndex = players.indexOf(player);
+        int previousIndex = (currentIndex - 1 + players.size()) % players.size();
+        return players.get(previousIndex);
+    }
+
+    public static boolean isTax(String attack){
+        return attack != null && attack.equals("tax");
+    }
+
 
 
     public static void gameOver(Player player) {
         System.out.println("Game Over! Your final score is: " + player.getCurrentScore());
+    }
+
+    public static boolean isAnswered(int row, int col){
+        return board[row][col] == null;
     }
 }

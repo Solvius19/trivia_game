@@ -5,10 +5,14 @@ import java.util.List;
 import java.util.Scanner;
 
 public class EventHelper {
+    private EventHelper() {
+        /* This utility class should not be instantiated */
+    }
+
 
     private static Question[][] board = new Question[6][5];
-    private static Scanner input = new Scanner(System.in);
-    private static ArrayList<Player> players = new ArrayList<>();
+    private static final Scanner input = new Scanner(System.in);
+    private static final ArrayList<Player> players = new ArrayList<>();
 
     public static void setupGame(){
         board = BoardBuildEngine.buildBoard();
@@ -38,8 +42,12 @@ public class EventHelper {
 
     public static void runGame() {
         while (!isGameOver()) {
+            String attack = null;
             for (Player player : players) {
-                doTurn(player);
+                doTurn(player, attack);
+                if (players.size() > 1) {
+                    attack = attackMenu(player);
+                }
             }
         }
         System.out.println("Game Over!");
@@ -47,6 +55,40 @@ public class EventHelper {
             System.out.println(player.getName() + "'s final score: " + player.getCurrentScore());
         }
         System.out.println("Thanks for playing!");
+    }
+
+    private static String attackMenu(Player player) {
+        System.out.println(player.getName() + ", would you like to use an attack? (y/n)");
+        System.out.println("Current score: " + player.getCurrentScore());
+        String choice = input.nextLine();
+        if (choice.equalsIgnoreCase("y")) {
+            System.out.println("Choose an attack:");
+            System.out.println("1. Block Out (-100 points)");
+            System.out.println("2. Scramble (-200 points)");
+            int attackChoice = input.nextInt();
+            input.nextLine(); // Consume newline
+            if (attackChoice == 1) {
+                if (player.getCurrentScore() < 100) {
+                    System.out.println("Not enough points to use Block Out.");
+                    return null;
+                }
+                player.subtractScore(100);
+                System.out.println("You chose Block Out.");
+                return "blockout";
+            } else if (attackChoice == 2) {
+                if (player.getCurrentScore() < 200) {
+                    System.out.println("Not enough points to use Scramble.");
+                    return null;
+                }
+                player.subtractScore(200);
+                System.out.println("You chose Scramble.");
+                return "scramble";
+            } else {
+                System.out.println("Invalid choice. No attack used.");
+            }
+        }
+        OutputUtil.clear();
+        return null;
     }
 
     private static boolean isGameOver() {
@@ -60,7 +102,7 @@ public class EventHelper {
         return true;
     }
 
-    private static void doTurn(Player player) {
+    private static void doTurn(Player player, String attack) {
         System.out.println(player.getName() + "'s turn. Current score: " + player.getCurrentScore());
         printBoard();
         System.out.print("Enter row (1-6) and column (1-5) of the question you want to answer (e.g., 2 3): ");
@@ -71,7 +113,7 @@ public class EventHelper {
             System.out.println("Invalid choice. Please choose again.");
             return;
         }
-        askQuestion(row, col, player);
+        askQuestion(row, col, player, attack);
         OutputUtil.enterToClear();
     }
 
@@ -89,10 +131,10 @@ public class EventHelper {
         }
     }
 
-    public static void askQuestion(int row, int col, Player player) {
+    public static void askQuestion(int row, int col, Player player, String attack) {
         Question question = board[row][col];
         System.out.println("Category: " + question.getCategory());
-        System.out.println("Question: " + question.getQuestion());
+        System.out.println("Question: " + Attack.modify(question.getQuestion(), attack));
         System.out.print("Your answer: ");
         String userAnswer = input.nextLine();
 

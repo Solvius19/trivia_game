@@ -18,7 +18,6 @@ public class BoardBuildEngine {
     private static Question[][] BOARD = new Question[5][6];
 
 
-
     public static Question[][] buildBoard() {
         // Prevent questions that rely upon multiple choices so it can be openly answered.
         CATEGORY_IDS = generateCategories();

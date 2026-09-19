@@ -1,15 +1,16 @@
 package org.example;
 
 public class Attack {
+    private Attack() {
+        /* This utility class should not be instantiated */
+    }
 
-    public static String blockOut(Player player, String question){
-        if (player.getCurrentScore() < 100) {
-            return question;
-        }
-        else {
-            player.subtractScore(100);
-        }
+
+    public static String blockOut(String question){
         int hlength = question.length() / 6;
+        if (hlength == 0) {
+            hlength = 1;
+        }
 
         for (int i = 0; i < hlength; i++) {
             int randomIndex = (int) (Math.random() * question.length());
@@ -18,13 +19,7 @@ public class Attack {
         return question;
     }
 
-    public static String scramble(Player player, String question){
-        if (player.getCurrentScore() < 200) {
-            return question;
-        }
-        else {
-            player.subtractScore(200);
-        }
+    public static String scramble(String question){
         String[] words = question.split(" ");
         StringBuilder scrambledQuestion = new StringBuilder();
 
@@ -45,4 +40,14 @@ public class Attack {
         return scrambledQuestion.toString().trim();
     }
 
+    public static String modify(String question, String attack) {
+        if (attack == null) {
+            return question;
+        }
+        return switch (attack) {
+            case "blockout" -> blockOut(question);
+            case "scramble" -> scramble(question);
+            default -> question;
+        };
+    }
 }

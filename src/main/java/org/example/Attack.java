@@ -19,6 +19,14 @@ public class Attack {
         return question;
     }
 
+    public static void tax(String question){
+        // Implementation for tax attack
+    }
+
+    public static void blinded(String question){
+        // Implementation for blinded attack
+    }
+
     public static String scramble(String question){
         String[] words = question.split(" ");
         StringBuilder scrambledQuestion = new StringBuilder();

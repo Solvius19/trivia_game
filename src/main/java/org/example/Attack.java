@@ -1,6 +1,11 @@
 package org.example;
 
+import java.util.Scanner;
+import java.util.Random;
+
 public class Attack {
+
+    static Random random = new Random();
     private Attack() {
         /* This utility class should not be instantiated */
     }
@@ -13,18 +18,40 @@ public class Attack {
         }
 
         for (int i = 0; i < hlength; i++) {
-            int randomIndex = (int) (Math.random() * question.length());
+            int randomIndex = random.nextInt(question.length());
             question = question.substring(0, randomIndex) + "#" + question.substring(randomIndex + 1);
         }
         return question;
     }
 
-    public static void tax(String question){
-        // Implementation for tax attack
+    public static void tax(boolean correct, Player player, Player player2, int value){
+        int taxAmount = (int) (value * 0.1);
+        if (correct) {
+            player.subtractScore(taxAmount);
+            player2.addScore(taxAmount);
+            System.out.println(player.getName() + " was taxed " + taxAmount + "by " + player2.getName() + " points for answering correctly!");
+        } else {
+            player.addScore(taxAmount);
+            player2.subtractScore(taxAmount);
+            System.out.println(player.getName() + " was rewarded " + taxAmount + "by " + player2.getName() + " points for answering incorrectly!");
+        }
     }
+    public static int[] blinded(){
+        Scanner input = new Scanner(System.in);
+        System.out.println("\nSelect a question for the next player:");
+        EventHelper.printBoard();
+        System.out.print("Enter row (1-6) and column (1-5) of the question (e.g., 2 3): ");
+        int row = input.nextInt() - 1;
+        int col = input.nextInt() - 1;
+        input.nextLine();
 
-    public static void blinded(String question){
-        // Implementation for blinded attack
+        if (row < 0 || row >= 6 || col < 0 || col >= 5 || EventHelper.isAnswered(row, col)) {
+            System.out.println("Invalid choice. No question selected.");
+            return new int[0];
+        }
+        System.out.println("You selected Row " + (row + 1) + ", Column " + (col + 1) + " for the next player!");
+        OutputUtil.clear();
+        return new int[]{row, col};
     }
 
     public static String scramble(String question){
@@ -35,7 +62,7 @@ public class Attack {
             if (word.length() > 3) {
                 char[] letters = word.toCharArray();
                 for (int i = 0; i < letters.length; i++) {
-                    int randomIndex = (int) (Math.random() * letters.length);
+                    int randomIndex = random.nextInt(letters.length);
                     char temp = letters[i];
                     letters[i] = letters[randomIndex];
                     letters[randomIndex] = temp;
@@ -58,4 +85,5 @@ public class Attack {
             default -> question;
         };
     }
+
 }

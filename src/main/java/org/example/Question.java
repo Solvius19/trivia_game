@@ -3,6 +3,7 @@ package org.example;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -51,17 +52,22 @@ public class Question {
 
 
     public String getQuestion() {
-        return question;
+        return formatValue(question);
     }
 
 
     public String getAnswer() {
-        return answer;
+        return formatValue(answer);
     }
 
 
     public List<String> getIncorrectAnswers() {
-        return incorrectAnswers;
+        List<String> formattedAnswers = new ArrayList<>();
+        for (String s : incorrectAnswers) {
+            s = formatValue(s);
+            formattedAnswers.add(s);
+        }
+        return formattedAnswers;
     }
 
 
@@ -80,5 +86,18 @@ public class Question {
 
     public void setValue(int i) {
         this.value = i;
+    }
+
+    private String formatValue(String value){
+        if (value.contains("&#039;")) {
+            value = value.replace("&#039;", "'");
+        }
+        if (value.contains("&quot;")) {
+            value = value.replace("&quot;", "\"");
+        }
+        if (value.contains("&amp;")) {
+            value = value.replace("&amp;", "&");
+        }
+        return value;
     }
 }

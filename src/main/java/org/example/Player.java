@@ -3,7 +3,7 @@ package org.example;
 public class Player {
 
     private int currentScore;
-    private String name;
+    private final String name;
 
     public Player(String name) {
         this.name = name;

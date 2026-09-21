@@ -1,6 +1,8 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 public class EventHelper {
@@ -170,8 +172,13 @@ public class EventHelper {
 
     public static void askQuestion(int row, int col, Player player, String attack) {
         Question question = board[row][col];
+        List<String> answerChoices = new ArrayList<>(question.getIncorrectAnswers());
+        answerChoices.add(question.getAnswer());
+        Collections.shuffle(answerChoices);
         System.out.println("Category: " + question.getCategory());
         System.out.println("Question: " + Attack.modify(question.getQuestion(), attack));
+        System.out.println("Answer choices: " + answerChoices);
+
         System.out.print("Your answer: ");
         String userAnswer = input.nextLine();
 

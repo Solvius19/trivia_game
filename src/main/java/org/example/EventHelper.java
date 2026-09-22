@@ -205,6 +205,25 @@ public class EventHelper {
         return " ".repeat(leftPadding) + s + " ".repeat(rightPadding);
     }
 
+    // add a timer method that prints the time to answer the question in a progress bar to the console
+    public static void timer() {
+        int total = 20;
+        for (int i = 1; i <= total; i++) {
+            String bar = "=".repeat(i) + " ".repeat(total - i);
+            int percent = (i * 100) / total;
+
+            System.out.print("\r[" + bar + "] " + percent + "%");
+
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new RuntimeException(e);
+            }
+        }
+        System.out.println("\nDownload Complete!");
+    }
+
     public static void printBoard() {
         System.out.println();
         if (board == null || board.length == 0 || board[0] == null) {

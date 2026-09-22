@@ -1,5 +1,6 @@
 package org.example;
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.Random;
 
@@ -84,6 +85,34 @@ public class Attack {
             case "scramble" -> scramble(question);
             default -> question;
         };
+    }
+
+    public static void swapScores(List<Player> players, Player currentPlayer) {
+        while (true) {
+            System.out.println("Choose a player to swap scores with:");
+            int num = 1;
+            for (Player p : players) {
+                if (!p.equals(currentPlayer)) {
+                    System.out.println(num + ". " + p.getName() + ": " + p.getCurrentScore());
+                    num++;
+                }
+            }
+            Scanner input = new Scanner(System.in);
+            int choice = input.nextInt();
+            if (choice < 1 || choice >= num) {
+                System.out.println("Invalid choice. Please choose again.");
+                continue;
+            }
+            Player selectedPlayer = players.get(choice - 1);
+            if (selectedPlayer.equals(currentPlayer)) {
+                System.out.println("You cannot swap scores with yourself. Please choose again.");
+                continue;
+            }
+            int tempScore = currentPlayer.getCurrentScore();
+            currentPlayer.setScore(selectedPlayer.getCurrentScore());
+            selectedPlayer.setScore(tempScore);
+            break;
+        }
     }
 
 }

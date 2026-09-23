@@ -47,7 +47,7 @@ public class Question {
     }
 
     public String getCategory() {
-        return category;
+        return formatValue(category);
     }
 
 

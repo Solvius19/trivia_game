@@ -1,9 +1,13 @@
 package org.example;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.*;
 
 public class EventHelper {
     private EventHelper() {
@@ -11,12 +15,12 @@ public class EventHelper {
     }
 
 
-    private static Question[][] board = new Question[6][5];
+    private static Question[][] board = new Question[5][6];
     private static final Scanner input = new Scanner(System.in);
     private static final ArrayList<Player> players = new ArrayList<>();
     private static int[] selectedQuestion = null;
 
-    public static void setupGame(){
+    public static void setupGame() {
         board = BoardBuildEngine.buildBoard();
         setupValues();
         OutputUtil.clear();
@@ -59,7 +63,7 @@ public class EventHelper {
         }
         System.out.println("Game Over!");
         for (Player player : players) {
-            System.out.println(player.getName() + "'s final score: " + player.getCurrentScore());
+            System.out.println(player.getName() + ", Your final score is: " + player.getCurrentScore());
         }
         System.out.println("Thanks for playing!");
     }
@@ -175,7 +179,7 @@ public class EventHelper {
                 System.out.println("The previous player selected: Row " + (row + 1) + ", Column " + (col + 1));
                 selectedQuestion = null;
             } else {
-                System.out.print("Enter row (1-6) and column (1-5) of the question you want to answer (e.g., 2 3): ");
+                System.out.print("Enter row (1-5) and column (1-6) of the question you want to answer (e.g., 2 3): ");
                 row = input.nextInt() - 1;
                 col = input.nextInt() - 1;
                 input.nextLine();
@@ -203,25 +207,6 @@ public class EventHelper {
         int leftPadding = (width - s.length()) / 2;
         int rightPadding = width - s.length() - leftPadding;
         return " ".repeat(leftPadding) + s + " ".repeat(rightPadding);
-    }
-
-    // add a timer method that prints the time to answer the question in a progress bar to the console
-    public static void timer() {
-        int total = 20;
-        for (int i = 1; i <= total; i++) {
-            String bar = "=".repeat(i) + " ".repeat(total - i);
-            int percent = (i * 100) / total;
-
-            System.out.print("\r[" + bar + "] " + percent + "%");
-
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new RuntimeException(e);
-            }
-        }
-        System.out.println("\nDownload Complete!");
     }
 
     public static void printBoard() {
@@ -334,12 +319,6 @@ public class EventHelper {
 
     public static boolean isTax(String attack){
         return attack != null && attack.equals("tax");
-    }
-
-
-
-    public static void gameOver(Player player) {
-        System.out.println("Game Over! Your final score is: " + player.getCurrentScore());
     }
 
     public static boolean isAnswered(int row, int col){

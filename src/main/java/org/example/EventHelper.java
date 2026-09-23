@@ -1,8 +1,5 @@
 package org.example;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +22,14 @@ public class EventHelper {
         setupValues();
         OutputUtil.clear();
         System.out.println("How many players? (1-4)");
+        while (input.hasNext()) {
+            if (input.hasNextInt()) {
+                break;
+            } else {
+                System.out.println("Invalid input. Please enter a number between 1 and 4.");
+                input.next();
+            }
+        }
         int choice = input.nextInt();
         if (choice < 1 || choice > 4) {
             System.out.println("Invalid choice. Please choose again.");
@@ -41,7 +46,10 @@ public class EventHelper {
     private static void setupValues() {
         for (int row = 0; row < board.length; row++) {
             for (int j = 0; j < board[0].length; j++) {
-                board[row][j].setValue((row + 1) * 100);
+                if (board[row][j] != null) {
+                    int value = (row + 1) * 200;
+                    board[row][j].setValue(value);
+                }
             }
         }
     }

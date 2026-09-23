@@ -15,7 +15,11 @@ public class Player {
     }
 
     public void subtractScore(int value) {
-        this.currentScore -= value;
+        if (value > this.currentScore) {
+            this.currentScore = -200;
+        } else {
+            this.currentScore -= value;
+        }
     }
 
     public int getCurrentScore() {

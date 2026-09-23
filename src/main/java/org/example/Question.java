@@ -2,6 +2,7 @@ package org.example;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,15 +90,6 @@ public class Question {
     }
 
     private String formatValue(String value){
-        if (value.contains("&#039;")) {
-            value = value.replace("&#039;", "'");
-        }
-        if (value.contains("&quot;")) {
-            value = value.replace("&quot;", "\"");
-        }
-        if (value.contains("&amp;")) {
-            value = value.replace("&amp;", "&");
-        }
-        return value;
+        return StringEscapeUtils.unescapeHtml4(value);
     }
 }

@@ -6,12 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
 import java.net.*;
-import java.net.http.*;
 import java.util.*;
 
 public class BoardBuildEngine {
 
-    private static int[] CATEGORY_IDS;
+    private static HashSet<Integer> CATEGORY_IDS;
     private static final int[] VALID_CATEGORY_IDS = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32};
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static Question[][] BOARD = new Question[5][6];
@@ -22,23 +21,20 @@ public class BoardBuildEngine {
         CATEGORY_IDS = generateCategories();
 
         System.out.println("=============================================");
-        System.out.println("      INITIALIZING JEOPARDY TRIVIA BOARD     ");
+        System.out.println("           INITIALIZING TRIVIA BOARD         ");
         System.out.println("=============================================");
-        System.out.println("[System] Preparing 6 categories. This takes ~30s due to API rate limits.");
+        System.out.println("[System] Preparing 6 categories. This takes ~30s due to API rate limits.");;
 
-        for (int i = 0; i < CATEGORY_IDS.length; i++) {
-            int catId = CATEGORY_IDS[i];
+        for (int i = 0; i < CATEGORY_IDS.size(); i++) {
+            int catId = CATEGORY_IDS.toArray(new Integer[0])[i];
             System.out.printf("%n[Loading Category %d/6] Fetching ID %d... ", (i + 1), catId);
 
             String jsonResponse = fetchCategoryJsonWithRetry(catId);
-
             buildColumnFromJson(jsonResponse, catId, i);
             System.out.print("Success!");
-
-            if (i < CATEGORY_IDS.length - 1) {
+            if (i < CATEGORY_IDS.size() - 1) {
                 try {
-                    System.out.print(" | Cooldown active... ");
-                    Thread.sleep(5500);
+                    Thread.sleep(1500);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -47,16 +43,15 @@ public class BoardBuildEngine {
         return BOARD;
     }
 
-    private static int[] generateCategories() {
+    private static HashSet<Integer> generateCategories() {
         // pick 6 unique random category IDs from VALID_CATEGORY_IDS
-        int[] selected = new int[6];
-        for (int i = 0; i < 6; i++){
+        HashSet<Integer> selected = new HashSet<>();
+        while (selected.size() < 6) {
             int rand = (int) (Math.random() * 23) + 9;
-            if (Arrays.stream(selected).anyMatch(x -> x == rand)) {
-                i--;
+            if (selected.contains(rand)) {
                 continue;
             }
-            selected[i] = rand;
+            selected.add(rand);
         }
         return selected;
     }
@@ -135,7 +130,7 @@ public class BoardBuildEngine {
     }
 
     private static String fetchCategoryJsonWithRetry(int categoryId) {
-        String url = "https://opentdb.com/api.php?amount=12&category=" + categoryId + "&type=multiple";
+        String url = "https://opentdb.com/api.php?amount=20&category=" + categoryId + "&type=multiple";
 
         RuntimeException lastError = null;
         for (int attempt = 1; attempt <= 3; attempt++) {

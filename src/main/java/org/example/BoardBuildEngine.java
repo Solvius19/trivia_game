@@ -10,15 +10,13 @@ import java.util.*;
 
 public class BoardBuildEngine {
 
-    private static HashSet<Integer> CATEGORY_IDS;
     private static final int[] VALID_CATEGORY_IDS = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32};
     private static final ObjectMapper MAPPER = new ObjectMapper();
     private static Question[][] BOARD = new Question[5][6];
 
 
     public static Question[][] buildBoard() {
-        // Prevent questions that rely upon multiple choices so it can be openly answered.
-        CATEGORY_IDS = generateCategories();
+        HashSet<Integer> CATEGORY_IDS = generateCategories();
 
         System.out.println("=============================================");
         System.out.println("           INITIALIZING TRIVIA BOARD         ");
@@ -99,7 +97,7 @@ public class BoardBuildEngine {
             System.out.println("[Warning] Pool is empty, using fallback: " + fallbackDiff);
             return new Question("Fallback Question", "Fallback Answer", "Fallback Category", fallbackDiff, 0);
         }
-        return pool.remove(0);
+        return pool.removeFirst();
     }
 
     private static String makeHttpRequest(String urlStr) {

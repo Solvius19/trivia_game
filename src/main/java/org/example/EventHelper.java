@@ -297,7 +297,7 @@ public class EventHelper {
         System.out.print("Your answer: ");
         String userAnswer = input.nextLine();
         try {
-            if (userAnswer.equalsIgnoreCase(question.getAnswer()) || answerMap.get(userAnswer).equalsIgnoreCase(question.getAnswer())) {
+            if (userAnswer.equalsIgnoreCase(question.getAnswer()) || answerMap.get(userAnswer.toUpperCase()).equalsIgnoreCase(question.getAnswer())) {
                 System.out.println("Correct!");
                 if (isTax(attack)) {
                     Attack.tax(true, player, getPreviousPlayer(player), question.getValue());

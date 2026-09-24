@@ -188,7 +188,7 @@ public class BoardBuildEngine {
     }
 
 
-    public static List<org.example.Question> createQuestion(int category, String difficulty) {
+    public static List<Question> createQuestion(int category, String difficulty) {
         String json = fetchJson(category, difficulty);
         try {
             JsonNode tree = MAPPER.readTree(json);
@@ -198,7 +198,7 @@ public class BoardBuildEngine {
                 throw new IllegalArgumentException("JSON response did not contain any questions");
             }
 
-            return MAPPER.readValue(results.traverse(), new TypeReference<List<org.example.Question>>() {});
+            return MAPPER.readValue(results.traverse(), new TypeReference<List<Question>>() {});
 
         } catch (IOException e) {
             throw new RuntimeException("Failed to convert JSON into Question objects", e);

@@ -1,1 +1,2 @@
-# Jeopardy Style Game
+# Trivia Game
+

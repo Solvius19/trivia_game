@@ -296,27 +296,36 @@ public class EventHelper {
 
         System.out.print("Your answer: ");
         String userAnswer = input.nextLine();
-
-        if (userAnswer.equalsIgnoreCase(question.getAnswer()) || answerMap.get(userAnswer).equalsIgnoreCase(question.getAnswer())) {
-            System.out.println("Correct!");
-            if (isTax(attack)) {
-                Attack.tax(true, player, getPreviousPlayer(player), question.getValue());
+        try {
+            if (userAnswer.equalsIgnoreCase(question.getAnswer()) || answerMap.get(userAnswer).equalsIgnoreCase(question.getAnswer())) {
+                System.out.println("Correct!");
+                if (isTax(attack)) {
+                    Attack.tax(true, player, getPreviousPlayer(player), question.getValue());
+                } else {
+                    player.addScore(question.getValue() * player.getCurrentStreakMultiplier());
+                }
+                player.incrementStreak();
+            } else {
+                System.out.println("Incorrect! The correct answer was: " + question.getAnswer());
+                if (isTax(attack)) {
+                    Attack.tax(false, player, getPreviousPlayer(player), question.getValue());
+                } else {
+                    player.subtractScore(question.getValue());
+                }
+                player.resetStreak();
             }
-            else {
-                player.addScore(question.getValue() * player.getCurrentStreakMultiplier());
-            }
-            player.incrementStreak();
-        } else {
-            System.out.println("Incorrect! The correct answer was: " + question.getAnswer());
+        } catch (NullPointerException e) {
+            System.out.println("Invalid answer choice. The correct answer was: " + question.getAnswer());
             if (isTax(attack)) {
                 Attack.tax(false, player, getPreviousPlayer(player), question.getValue());
-            }
-            else {
+            } else {
                 player.subtractScore(question.getValue());
             }
             player.resetStreak();
         }
-        board[row][col] = null;
+        finally {
+            board[row][col] = null;
+        }
     }
 
     private static Player getPreviousPlayer(Player player) {

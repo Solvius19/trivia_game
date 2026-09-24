@@ -216,7 +216,7 @@ public class EventHelper {
         return " ".repeat(leftPadding) + s + " ".repeat(rightPadding);
     }
 
-    private static void printBoard() {
+    public static void printBoard() {
         System.out.println();
         if (board == null || board.length == 0 || board[0] == null) {
             System.out.println("No board to display.");
@@ -338,7 +338,7 @@ public class EventHelper {
         return attack != null && attack.equals("tax");
     }
 
-    private static boolean isAnswered(int row, int col){
+    public static boolean isAnswered(int row, int col){
         return board[row][col] == null;
     }
 

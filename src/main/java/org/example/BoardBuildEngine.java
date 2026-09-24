@@ -7,12 +7,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.*;
 import java.net.*;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 public class BoardBuildEngine {
 
     private static final int[] VALID_CATEGORY_IDS = {9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32};
     private static final ObjectMapper MAPPER = new ObjectMapper();
-    private static Question[][] BOARD = new Question[5][6];
+    private static final Question[][] BOARD = new Question[5][6];
 
 
     public static Question[][] buildBoard() {
@@ -23,20 +24,25 @@ public class BoardBuildEngine {
         System.out.println("=============================================");
         System.out.println("[System] Preparing 6 categories. This takes ~30s due to API rate limits.");;
 
-        for (int i = 0; i < CATEGORY_IDS.size(); i++) {
-            int catId = CATEGORY_IDS.toArray(new Integer[0])[i];
-            System.out.printf("%n[Loading Category %d/6] Fetching ID %d... ", (i + 1), catId);
+        int count = 1;
+        int total = CATEGORY_IDS.size();
+        for (int catId : CATEGORY_IDS) {
+            System.out.printf("%n[Loading Category %d/%d] Fetching ID %d... ", count, total, catId);
 
             String jsonResponse = fetchCategoryJsonWithRetry(catId);
-            buildColumnFromJson(jsonResponse, catId, i);
+            buildColumnFromJson(jsonResponse, catId, count - 1);
             System.out.print("Success!");
-            if (i < CATEGORY_IDS.size() - 1) {
+
+            // Sleep only if it's NOT the very last item
+            if (count < total) {
                 try {
-                    Thread.sleep(1500);
+                    TimeUnit.MILLISECONDS.sleep(1500);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
+                    break;
                 }
             }
+            count++;
         }
         return BOARD;
     }
@@ -200,7 +206,7 @@ public class BoardBuildEngine {
     }
 
     private static String fetchJson(int category, String difficulty) {
-        StringBuilder url = new StringBuilder("https://opentdb.com/api.php?amount=16&type=multiple&category=")
+        StringBuilder url = new StringBuilder("https://opentdb.com/api.php?amount=20&type=multiple&category=")
                 .append(category);
         if (difficulty != null && !difficulty.isBlank()) {
             url.append("&difficulty=").append(difficulty);

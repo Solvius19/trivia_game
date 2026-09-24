@@ -4,10 +4,14 @@ public class Player {
 
     private int currentScore;
     private final String name;
+    private int currentStreak;
+    private int currentStreakMultiplier;
 
     public Player(String name) {
         this.name = name;
         this.currentScore = 0;
+        this.currentStreak = 0;
+        this.currentStreakMultiplier = 1;
     }
 
     public void addScore(int value) {
@@ -32,5 +36,25 @@ public class Player {
 
     public void setScore(int score) {
         this.currentScore = score;
+    }
+
+    public int getCurrentStreak() {
+        return currentStreak;
+    }
+
+    public int getCurrentStreakMultiplier() {
+        return currentStreakMultiplier;
+    }
+
+    public void incrementStreak() {
+        this.currentStreak++;
+        if (this.currentStreak % 3 == 0) {
+            this.currentStreakMultiplier++;
+        }
+    }
+
+    public void resetStreak() {
+        this.currentStreak = 0;
+        this.currentStreakMultiplier = 1;
     }
 }

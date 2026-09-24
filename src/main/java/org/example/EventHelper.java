@@ -67,6 +67,10 @@ public class EventHelper {
                     attack = attackMenu(player);
                     OutputUtil.clear();
                 }
+                if (attack != null && attack.equals("swap")) {
+                    Attack.swapScores(input, players, player);
+                    System.out.println("Points swapped! Current score: " + player.getCurrentScore());
+                }
             }
         }
         System.out.println("Game Over!");
@@ -171,11 +175,7 @@ public class EventHelper {
     }
 
     private static void doTurn(Player player, String attack) {
-        if (attack != null && attack.equals("swap")) {
-            Attack.swapScores(input, players, player);
-            System.out.println(player.getName() + " has had their score swapped.");
-            return;
-        }
+        OutputUtil.clear();
         System.out.println(player.getName() + "'s turn. Current score: " + player.getCurrentScore());
         printBoard();
 

@@ -202,7 +202,7 @@ public class EventHelper {
         OutputUtil.enterToClear();
     }
 
-    public static String centerString(String s, int width) {
+    private static String centerString(String s, int width) {
         if (s == null) s = "";
 
         if (s.length() > width) {
@@ -216,7 +216,7 @@ public class EventHelper {
         return " ".repeat(leftPadding) + s + " ".repeat(rightPadding);
     }
 
-    public static void printBoard() {
+    private static void printBoard() {
         System.out.println();
         if (board == null || board.length == 0 || board[0] == null) {
             System.out.println("No board to display.");
@@ -286,7 +286,7 @@ public class EventHelper {
         return String.format("%-" + width + "s", s);
     }
 
-    public static void askQuestion(int row, int col, Player player, String attack) {
+    private static void askQuestion(int row, int col, Player player, String attack) {
         Question question = board[row][col];
 
         System.out.println("Category: " + question.getCategory());
@@ -334,11 +334,11 @@ public class EventHelper {
         return players.get(previousIndex);
     }
 
-    public static boolean isTax(String attack){
+    private static boolean isTax(String attack){
         return attack != null && attack.equals("tax");
     }
 
-    public static boolean isAnswered(int row, int col){
+    private static boolean isAnswered(int row, int col){
         return board[row][col] == null;
     }
 

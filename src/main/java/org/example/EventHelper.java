@@ -1,9 +1,6 @@
 package org.example;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.*;
 
 public class EventHelper {
@@ -177,6 +174,7 @@ public class EventHelper {
     private static void doTurn(Player player, String attack) {
         OutputUtil.clear();
         System.out.println(player.getName() + "'s turn. Current score: " + player.getCurrentScore());
+        System.out.println("Current streak: " + player.getCurrentStreak() + " (Multiplier: x" + player.getCurrentStreakMultiplier() + ")");
         printBoard();
 
         int row;
@@ -290,24 +288,24 @@ public class EventHelper {
 
     public static void askQuestion(int row, int col, Player player, String attack) {
         Question question = board[row][col];
-        List<String> answerChoices = new ArrayList<>(question.getIncorrectAnswers());
-        answerChoices.add(question.getAnswer());
-        Collections.shuffle(answerChoices);
+
         System.out.println("Category: " + question.getCategory());
         System.out.println("Question: " + Attack.modify(question.getQuestion(), attack));
-        System.out.println("Answer choices: " + answerChoices);
+        Map<String, String> answerMap = answerMap(question);
+        printAnswerChoices(answerMap);
 
         System.out.print("Your answer: ");
         String userAnswer = input.nextLine();
 
-        if (userAnswer.equalsIgnoreCase(question.getAnswer())) {
+        if (userAnswer.equalsIgnoreCase(question.getAnswer()) || answerMap.get(userAnswer).equalsIgnoreCase(question.getAnswer())) {
             System.out.println("Correct!");
             if (isTax(attack)) {
                 Attack.tax(true, player, getPreviousPlayer(player), question.getValue());
             }
             else {
-                player.addScore(question.getValue());
+                player.addScore(question.getValue() * player.getCurrentStreakMultiplier());
             }
+            player.incrementStreak();
         } else {
             System.out.println("Incorrect! The correct answer was: " + question.getAnswer());
             if (isTax(attack)) {
@@ -316,6 +314,7 @@ public class EventHelper {
             else {
                 player.subtractScore(question.getValue());
             }
+            player.resetStreak();
         }
         board[row][col] = null;
     }
@@ -344,5 +343,23 @@ public class EventHelper {
             case 6 -> "\u001B[36m" + param + "\u001B[0m";
             default -> "\u001B[0m";
         };
+    }
+
+    private static Map<String, String> answerMap(Question question) {
+        List<String> answerChoices = new ArrayList<>(question.getIncorrectAnswers());
+        answerChoices.add(question.getAnswer());
+        Collections.shuffle(answerChoices);
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < answerChoices.size(); i++) {
+            String key = String.valueOf((char) ('A' + i));
+            map.put(key, answerChoices.get(i));
+        }
+        return map;
+    }
+
+    private static void printAnswerChoices(Map<String, String> answerMap) {
+        for (Map.Entry<String, String> entry : answerMap.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
     }
 }

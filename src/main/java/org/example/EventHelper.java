@@ -118,7 +118,7 @@ public class EventHelper {
                     }
                     player.subtractScore(500);
                     System.out.println("You chose Select Next Question.");
-                    selectedQuestion = Attack.blinded();
+                    selectedQuestion = Attack.blinded(input);
                     return "selectQuestion";
                 }
                 case 4 -> {
@@ -172,6 +172,7 @@ public class EventHelper {
 
     private static void doTurn(Player player, String attack) {
         if (attack != null && attack.equals("swap")) {
+            Attack.swapScores(input, players, player);
             System.out.println(player.getName() + " has had their score swapped.");
             return;
         }
@@ -235,7 +236,7 @@ public class EventHelper {
             String category = getCategoryForColumn(c);
             String centered = centerString(category, colWidth);
             centeredCategories[c] = centered;
-            System.out.print(centered + " | ");
+            System.out.print(color(c + 1, centered + " | "));
         }
         System.out.println();
 
@@ -331,5 +332,17 @@ public class EventHelper {
 
     public static boolean isAnswered(int row, int col){
         return board[row][col] == null;
+    }
+
+    private static String color(int color, String param){
+        return switch (color) {
+            case 1 -> "\u001B[31m" + param + "\u001B[0m";
+            case 2 -> "\u001B[32m" + param + "\u001B[0m";
+            case 3 -> "\u001B[33m" + param + "\u001B[0m";
+            case 4 -> "\u001B[34m" + param + "\u001B[0m";
+            case 5 -> "\u001B[35m" + param + "\u001B[0m";
+            case 6 -> "\u001B[36m" + param + "\u001B[0m";
+            default -> "\u001B[0m";
+        };
     }
 }

@@ -37,8 +37,7 @@ public class Attack {
             System.out.println(player.getName() + " was rewarded " + taxAmount + "by " + player2.getName() + " points for answering incorrectly!");
         }
     }
-    public static int[] blinded(){
-        Scanner input = new Scanner(System.in);
+    public static int[] blinded(Scanner input){
         System.out.println("\nSelect a question for the next player:");
         EventHelper.printBoard();
         System.out.print("Enter row (1-6) and column (1-5) of the question (e.g., 2 3): ");
@@ -87,7 +86,7 @@ public class Attack {
         };
     }
 
-    public static void swapScores(List<Player> players, Player currentPlayer) {
+    public static void swapScores(Scanner input, List<Player> players, Player currentPlayer) {
         while (true) {
             System.out.println("Choose a player to swap scores with:");
             int num = 1;
@@ -97,7 +96,7 @@ public class Attack {
                     num++;
                 }
             }
-            Scanner input = new Scanner(System.in);
+            System.out.print("Enter your choice: ");
             int choice = input.nextInt();
             if (choice < 1 || choice >= num) {
                 System.out.println("Invalid choice. Please choose again.");

@@ -200,7 +200,7 @@ public class BoardBuildEngine {
     }
 
     private static String fetchJson(int category, String difficulty) {
-        StringBuilder url = new StringBuilder("https://opentdb.com/api.php?amount=10&type=multiple&category=")
+        StringBuilder url = new StringBuilder("https://opentdb.com/api.php?amount=16&type=multiple&category=")
                 .append(category);
         if (difficulty != null && !difficulty.isBlank()) {
             url.append("&difficulty=").append(difficulty);

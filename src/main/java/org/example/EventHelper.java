@@ -85,10 +85,10 @@ public class EventHelper {
             System.out.println("Choose an attack:");
             System.out.println("1. Block Out (-100 points)");
             System.out.println("2. Scramble (-200 points)");
-            System.out.println("3. Select Next Question (-500 points)");
-            System.out.println("4. Tax (-300 points)");
-            System.out.println("5. Swap Scores (-400 points)");
-            System.out.println("6. Skip Turn (-200 points)");
+            System.out.println("3. Skip Turn (-300 points)");
+            System.out.println("4. Select Next Question (-500 points)");
+            System.out.println("5. Tax (-700 points)");
+            System.out.println("6. Swap Scores (-2000 points)");
             System.out.println("7. No attack");
 
             int attackChoice = input.nextInt();
@@ -113,6 +113,15 @@ public class EventHelper {
                     return "scramble";
                 }
                 case 3 -> {
+                    if (player.getCurrentScore() < 300) {
+                        System.out.println("Not enough points to use Skip Turn.");
+                        return null;
+                    }
+                    player.subtractScore(300);
+                    System.out.println("You chose Skip Turn.");
+                    return "skip";
+                }
+                case 4 -> {
                     if (player.getCurrentScore() < 500) {
                         System.out.println("Not enough points to use Select Next Question.");
                         return null;
@@ -122,32 +131,23 @@ public class EventHelper {
                     selectedQuestion = Attack.blinded(input);
                     return "selectQuestion";
                 }
-                case 4 -> {
-                    if (player.getCurrentScore() < 300) {
+                case 5 -> {
+                    if (player.getCurrentScore() < 700) {
                         System.out.println("Not enough points to use Tax.");
                         return null;
                     }
-                    player.subtractScore(300);
+                    player.subtractScore(700);
                     System.out.println("You chose Tax.");
                     return "tax";
                 }
-                case 5 -> {
-                    if (player.getCurrentScore() < 400) {
+                case 6 -> {
+                    if (player.getCurrentScore() < 2000) {
                         System.out.println("Not enough points to use Swap Scores.");
                         return null;
                     }
-                    player.subtractScore(400);
+                    player.subtractScore(2000);
                     System.out.println("You chose Swap Scores.");
                     return "swap";
-                }
-                case 6 -> {
-                    if (player.getCurrentScore() < 200) {
-                        System.out.println("Not enough points to use Skip Turn.");
-                        return null;
-                    }
-                    player.subtractScore(200);
-                    System.out.println("You chose Skip Turn.");
-                    return "skip";
                 }
                 case 7 -> {
                     System.out.println("No attack used.");

@@ -1,11 +1,10 @@
-package org.example;
+package org.example.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.text.StringEscapeUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @SuppressWarnings("unused")
@@ -69,6 +68,18 @@ public class Question {
             formattedAnswers.add(s);
         }
         return formattedAnswers;
+    }
+
+    public Map<String, String> getAnswers() {
+        List<String> answerChoices = new ArrayList<>(this.getIncorrectAnswers());
+        answerChoices.add(answer);
+        Collections.shuffle(answerChoices);
+        Map<String, String> map = new HashMap<>();
+        for (int i = 0; i < answerChoices.size(); i++) {
+            String key = String.valueOf((char) ('A' + i));
+            map.put(key, answerChoices.get(i));
+        }
+        return map;
     }
 
 

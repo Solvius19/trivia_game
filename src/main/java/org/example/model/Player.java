@@ -1,4 +1,4 @@
-package org.example;
+package org.example.model;
 
 public class Player {
 
@@ -56,5 +56,13 @@ public class Player {
     public void resetStreak() {
         this.currentStreak = 0;
         this.currentStreakMultiplier = 1;
+    }
+
+    @Override
+    public String toString() {
+        return name + "'s turn. Current score: " +
+                currentScore + "\nCurrent streak: " +
+                currentStreak + " (Multiplier: x" +
+                currentStreakMultiplier + ")";
     }
 }

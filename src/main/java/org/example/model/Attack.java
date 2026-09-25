@@ -1,4 +1,8 @@
-package org.example;
+package org.example.model;
+
+import org.example.controller.TriviaController;
+import org.example.view.OutputUtil;
+import org.example.view.TriviaView;
 
 import java.util.List;
 import java.util.Scanner;
@@ -34,21 +38,21 @@ public class Attack {
             System.out.println(player.getName() + " was rewarded " + taxAmount + "by " + player2.getName() + " points for answering incorrectly!");
         }
     }
-    public static int[] blinded(Scanner input){
+    public static Question blinded(Scanner input){
         System.out.println("\nSelect a question for the next player:");
-        EventHelper.printBoard();
+        TriviaView.printBoard(TriviaController.getBoard());
         System.out.print("Enter row (1-6) and column (1-5) of the question (e.g., 2 3): ");
         int row = input.nextInt() - 1;
         int col = input.nextInt() - 1;
         input.nextLine();
 
-        if (row < 0 || row >= 6 || col < 0 || col >= 5 || EventHelper.isAnswered(row, col)) {
+        if (row < 0 || row >= 6 || col < 0 || col >= 5 || TriviaController.isEmpty(row, col)) {
             System.out.println("Invalid choice. No question selected.");
-            return new int[0];
+            return null;
         }
         System.out.println("You selected Row " + (row + 1) + ", Column " + (col + 1) + " for the next player!");
         OutputUtil.clear();
-        return new int[]{row, col};
+        return TriviaController.getBoard(row, col);
     }
 
     public static String scramble(String question){

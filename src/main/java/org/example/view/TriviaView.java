@@ -106,12 +106,6 @@ public class TriviaView {
         return " ".repeat(leftPadding) + s + " ".repeat(rightPadding);
     }
 
-    private static void printAnswerChoices(Map<String, String> answerMap) {
-        for (Map.Entry<String, String> entry : answerMap.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
-        }
-    }
-
     private static String color(int color, String param){
         return switch (color) {
             case 1 -> "\u001B[31m" + param + "\u001B[0m";
@@ -208,15 +202,11 @@ public class TriviaView {
     }
 
     public static void askQuestion(Question question, Player player, String attack) {
-        System.out.println("Category: " + question.getCategory());
-        System.out.println("Question: " + Attack.modify(question.getQuestion(), attack));
-        Map<String, String> answerMap = question.getAnswers();
-        printAnswerChoices(answerMap);
-
+        String modifiedQuestion = Attack.modify(question.getQuestion(), attack);
         System.out.print("Your answer: ");
         String userAnswer = input.nextLine();
 
-        boolean correct = TriviaController.checkAnswer(player, userAnswer, question, answerMap);
+        boolean correct = TriviaController.checkAnswer(userAnswer, question);
 
         if (correct){
             System.out.println("Correct!");

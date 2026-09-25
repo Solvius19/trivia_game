@@ -54,9 +54,7 @@ public class Question {
     public String getQuestion() {
         return formatValue(question);
     }
-
-
-    public String getAnswer() {
+    public String getCorrectAnswer() {
         return formatValue(answer);
     }
 
@@ -82,6 +80,14 @@ public class Question {
         return map;
     }
 
+    public boolean checkAnswer(String userAnswer, Question question) {
+        try {
+            Map<String, String> answers = getAnswers();
+            return userAnswer.equalsIgnoreCase(getCorrectAnswer()) || answers.get(userAnswer.toUpperCase()).equalsIgnoreCase(getCorrectAnswer());
+        } catch (NullPointerException e) {
+            return false;
+        }
+    }
 
     @Override
     public String toString() {

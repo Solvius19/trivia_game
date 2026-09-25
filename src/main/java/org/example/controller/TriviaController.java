@@ -1,11 +1,8 @@
 package org.example.controller;
 
-import org.example.model.Attack;
-import org.example.model.BoardBuildEngine;
-import org.example.model.Player;
-import org.example.model.Question;
-import org.example.view.OutputUtil;
-import org.example.view.TriviaView;
+import org.example.model.*;
+import org.example.service.BoardBuildEngine;
+import org.example.view.*;
 
 import java.util.*;
 
@@ -14,7 +11,6 @@ public class TriviaController {
         /* This utility class should not be instantiated */
     }
 
-    private static Question[][] board = new Question[5][6];
     private static final Scanner input = new Scanner(System.in);
     private static ArrayList<Player> players;
 
@@ -90,67 +86,34 @@ public class TriviaController {
         return "Category";
     }
 
-    private static Player getPreviousPlayer(Player player) {
+    private static Player getPlayer(Player player, int turns) {
         int currentIndex = players.indexOf(player);
-        int previousIndex = (currentIndex - 1 + players.size()) % players.size();
-        return players.get(previousIndex);
+        if (turns == 0 || player == null) {
+            return player;
+        }
+        else {
+            int nextIndex = (currentIndex + turns) % players.size();
+            return players.get(nextIndex);
+        }
     }
 
-    public static boolean checkAnswer(Player player, String userAnswer, Question question, Map<String, String> answerMap) {
-        try {
-            boolean correct = isCorrect(userAnswer, question, answerMap);
-            if (correct) {
-                player.addScore(question.getValue());
-                player.incrementStreak();
-            } else {
-                if (isTax(attack)) {
-                    Attack.tax(false, player, getPreviousPlayer(player), question.getValue());
-                } else {
-                    player.subtractScore(question.getValue());
-                }
-                player.resetStreak();
-            }
-        } catch (NullPointerException e) {
-            if (isTax(attack)) {
-                Attack.tax(correct, player, getPreviousPlayer(player), question.getValue());
-            } else {
-                player.subtractScore(question.getValue());
-            }
-            player.resetStreak();
-        }
-        finally {
-            board[row][col] = null;
-        }
-    }
 
     private static boolean isTax(String attack){
         return attack != null && attack.equals("tax");
     }
 
-    private static boolean isCorrect(String userAnswer, Question question, Map<String, String> answerMap){
-        return userAnswer.equalsIgnoreCase(question.getAnswer()) || answerMap.get(userAnswer.toUpperCase()).equalsIgnoreCase(question.getAnswer());
-    }
-
-    public static boolean isEmpty(int row, int col){
-        return board[row][col] == null;
-    }
-
-    public static Question[][] getBoard() {
-        return board;
-    }
-
-    public static Question getBoard(int row, int col) {
-        return board[row][col];
-    }
-
-    private static int[] getQuestionLocation(Question question){
-        for (int row = 0; row < board.length; row++) {
-            for (int col = 0; col < board[row].length; col++) {
-                if (board[row][col] == question) {
-                    return new int[]{row, col};
-                }
-            }
+    public static String getQuestion(Question question){
+        StringBuilder output = new StringBuilder();
+        output.append("Category: ").append(question.getCategory()).append("\n");
+        output.append("Question: ").append(Attack.modify(question.getQuestion(), attack)).append("\n");
+        Map<String, String> answerMap = question.getAnswers();
+        for (Map.Entry<String, String> entry : answerMap.entrySet()) {
+            output.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
         }
-        return null;
+        return output.toString();
+    }
+
+    public static void getFormattedBoard() {
+
     }
 }

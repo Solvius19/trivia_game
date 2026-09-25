@@ -1,8 +1,9 @@
-package org.example.model;
+package org.example.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.example.model.Question;
 
 import java.io.*;
 import java.net.*;

@@ -33,7 +33,6 @@ public class BoardBuildEngine {
             buildColumnFromJson(jsonResponse, catId, count - 1);
             System.out.print("Success!");
 
-            // Sleep only if it's NOT the very last item
             if (count < total) {
                 try {
                     TimeUnit.MILLISECONDS.sleep(1500);
@@ -119,11 +118,11 @@ public class BoardBuildEngine {
             if (stream == null) {
                 throw new IOException("HTTP " + status + " with no response body");
             }
-            BufferedReader in = new BufferedReader(new InputStreamReader(stream));
+            BufferedReader input = new BufferedReader(new InputStreamReader(stream));
             StringBuilder content = new StringBuilder();
             String inputLine;
-            while ((inputLine = in.readLine()) != null) content.append(inputLine);
-            in.close();
+            while ((inputLine = input.readLine()) != null) content.append(inputLine);
+            input.close();
             if (status < 200 || status >= 300) {
                 throw new IOException("HTTP " + status + " for " + urlStr + " body=" + content);
             }

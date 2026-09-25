@@ -2,25 +2,22 @@ package org.example;
 
 import java.util.List;
 import java.util.Scanner;
-import java.util.Random;
 
 public class Attack {
-
-    static Random random = new Random();
     private Attack() {
         /* This utility class should not be instantiated */
     }
 
 
     public static String blockOut(String question){
-        int hlength = question.length() / 6;
-        if (hlength == 0) {
-            hlength = 1;
+        int length = question.length() / 6;
+        if (length == 0) {
+            length = 1;
         }
 
-        for (int i = 0; i < hlength; i++) {
-            int randomIndex = random.nextInt(question.length());
-            question = question.substring(0, randomIndex) + "#" + question.substring(randomIndex + 1);
+        for (int i = 0; i < length; i++) {
+            int random = (int) (Math.random() * question.length());
+            question = question.substring(0, random) + "#" + question.substring(random + 1);
         }
         return question;
     }
@@ -62,7 +59,7 @@ public class Attack {
             if (word.length() > 3) {
                 char[] letters = word.toCharArray();
                 for (int i = 0; i < letters.length; i++) {
-                    int randomIndex = random.nextInt(letters.length);
+                    int randomIndex = (int) (Math.random() * letters.length);
                     char temp = letters[i];
                     letters[i] = letters[randomIndex];
                     letters[randomIndex] = temp;

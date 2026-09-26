@@ -44,6 +44,9 @@ public class TriviaController {
             return;
         }
 
+        System.out.println(player.getName() + "'s turn!");
+        System.out.println("Current score: " + player.getCurrentScore());
+
         TriviaView.printBoard(game.getBoard());
 
         Question currentQuestion = resolveQuestion(player, pending);

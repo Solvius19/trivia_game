@@ -15,6 +15,7 @@ public class Question {
     private String difficulty;
     private String category;
     private String question;
+    private Map<String, String> answerMap;
 
     @JsonProperty("correct_answer")
     private String answer;
@@ -31,6 +32,7 @@ public class Question {
         this.category = category;
         this.difficulty = difficulty;
         this.value = value;
+        this.answerMap = buildAnswersMap();
     }
 
     public int getValue() {
@@ -68,7 +70,7 @@ public class Question {
         return formattedAnswers;
     }
 
-    public Map<String, String> getAnswers() {
+    public Map<String, String> buildAnswersMap() {
         List<String> answerChoices = new ArrayList<>(this.getIncorrectAnswers());
         answerChoices.add(answer);
         Collections.shuffle(answerChoices);
@@ -80,10 +82,16 @@ public class Question {
         return map;
     }
 
-    public boolean checkAnswer(String userAnswer, Question question) {
+    public Map<String, String> getAnswerMap() {
+        if (answerMap == null) {
+            answerMap = buildAnswersMap();
+        }
+        return answerMap;
+    }
+
+    public boolean checkAnswer(String userAnswer) {
         try {
-            Map<String, String> answers = getAnswers();
-            return userAnswer.equalsIgnoreCase(getCorrectAnswer()) || answers.get(userAnswer.toUpperCase()).equalsIgnoreCase(getCorrectAnswer());
+            return userAnswer.equalsIgnoreCase(getCorrectAnswer()) || answerMap.get(userAnswer.toUpperCase()).equalsIgnoreCase(getCorrectAnswer());
         } catch (NullPointerException e) {
             return false;
         }

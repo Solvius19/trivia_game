@@ -3,22 +3,23 @@ package org.example.model;
 import org.example.service.BoardBuildEngine;
 
 public class Board {
-    private static Question[][] boardState;
 
-    static {
-        boardState = BoardBuildEngine.buildBoard();
+    private final Question[][] boardState;
+
+    public Board() {
+        this.boardState = BoardBuildEngine.buildBoard();
         setupValues();
     }
 
-    public static Question[][] getBoard() {
+    public Question[][] getBoard() {
         return boardState;
     }
 
-    public static Question getBoard(int row, int col) {
+    public Question getBoard(int row, int col) {
         return boardState[row][col];
     }
 
-    private static int[] getQuestionLocation(Question question){
+    private int[] getQuestionLocation(Question question) {
         for (int row = 0; row < boardState.length; row++) {
             for (int col = 0; col < boardState[row].length; col++) {
                 if (boardState[row][col] == question) {
@@ -29,22 +30,23 @@ public class Board {
         return null;
     }
 
-    public static void removeQuestion(Question question) {
+    public void removeQuestion(Question question) {
         int[] location = getQuestionLocation(question);
         if (location != null) {
-            int row = location[0];
-            int col = location[1];
-            boardState[row][col] = null;
+            boardState[location[0]][location[1]] = null;
         }
     }
 
-    public static boolean isEmpty(int row, int col){
+    public boolean isEmpty(int row, int col) {
         return boardState[row][col] == null;
     }
 
+    public boolean isValid(int row, int col) {
+        return row >= 0 && row < boardState.length
+                && col >= 0 && col < boardState[row].length;
+    }
 
     public String getCategoryForColumn(int col) {
-        if (boardState == null) return "Category";
         for (Question[] row : boardState) {
             if (row == null) continue;
             if (col >= 0 && col < row.length) {
@@ -57,13 +59,11 @@ public class Board {
         return "Category";
     }
 
-
-    private static void setupValues() {
+    private void setupValues() {
         for (int row = 0; row < boardState.length; row++) {
-            for (int j = 0; j < boardState[0].length; j++) {
-                if (boardState[row][j] != null) {
-                    int value = (row + 1) * 200;
-                    boardState[row][j].setValue(value);
+            for (int col = 0; col < boardState[row].length; col++) {
+                if (boardState[row][col] != null) {
+                    boardState[row][col].setValue((row + 1) * 200);
                 }
             }
         }

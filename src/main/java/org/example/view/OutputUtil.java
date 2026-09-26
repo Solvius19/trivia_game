@@ -20,7 +20,7 @@ public class OutputUtil {
     }
 
 
-    private static String padOrTrim(String s, int width) {
+    public static String padOrTrim(String s, int width) {
         if (s == null) s = "";
         if (s.length() > width) {
             if (width <= 3) return s.substring(0, width);
@@ -29,7 +29,7 @@ public class OutputUtil {
         return String.format("%-" + width + "s", s);
     }
 
-    private static String centerString(String s, int width) {
+    public static String centerString(String s, int width) {
         if (s == null) s = "";
 
         if (s.length() > width) {
@@ -43,7 +43,7 @@ public class OutputUtil {
         return " ".repeat(leftPadding) + s + " ".repeat(rightPadding);
     }
 
-    private static String color(int color, String param){
+    public static String color(int color, String param){
         return switch (color) {
             case 1 -> "\u001B[31m" + param + "\u001B[0m";
             case 2 -> "\u001B[32m" + param + "\u001B[0m";

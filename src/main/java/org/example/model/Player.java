@@ -66,23 +66,4 @@ public class Player {
                 currentStreakMultiplier + ")";
     }
 
-
-    public void updatePlayerScore(Player player, boolean correct, int value) {
-        if (correct) {
-            if (isTax(attack)) {
-                Attack.tax(true, player, getPreviousPlayer(player), value);
-            }
-            player.addScore(value);
-            player.incrementStreak();
-        } else {
-            if (isTax(attack)) {
-                Attack.tax(false, player, getPreviousPlayer(player), value);
-            } else {
-                player.subtractScore(value);
-            }
-            player.resetStreak();
-        }
-
-
-    }
 }

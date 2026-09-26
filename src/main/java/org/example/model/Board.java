@@ -7,6 +7,7 @@ public class Board {
 
     static {
         boardState = BoardBuildEngine.buildBoard();
+        setupValues();
     }
 
     public static Question[][] getBoard() {
@@ -41,4 +42,41 @@ public class Board {
         return boardState[row][col] == null;
     }
 
+
+    public String getCategoryForColumn(int col) {
+        if (boardState == null) return "Category";
+        for (Question[] row : boardState) {
+            if (row == null) continue;
+            if (col >= 0 && col < row.length) {
+                Question q = row[col];
+                if (q != null && q.getCategory() != null && !q.getCategory().isBlank()) {
+                    return q.getCategory();
+                }
+            }
+        }
+        return "Category";
+    }
+
+
+    private static void setupValues() {
+        for (int row = 0; row < boardState.length; row++) {
+            for (int j = 0; j < boardState[0].length; j++) {
+                if (boardState[row][j] != null) {
+                    int value = (row + 1) * 200;
+                    boardState[row][j].setValue(value);
+                }
+            }
+        }
+    }
+
+    public boolean isComplete() {
+        for (Question[] questions : boardState) {
+            for (Question q : questions) {
+                if (q != null) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }

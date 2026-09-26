@@ -5,8 +5,10 @@ import org.example.view.OutputUtil;
 
 public class Main {
     public static void main (String[] args){
-        TriviaController.setupGame();
+        System.out.println("Welcome to the Trivia Game!");
+        TriviaController triviaController = new TriviaController();
+        triviaController.setupGame();
         OutputUtil.clear();
-        TriviaController.runGame();
+        triviaController.runGame();
     }
 }

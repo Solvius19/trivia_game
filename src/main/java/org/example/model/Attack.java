@@ -115,4 +115,8 @@ public class Attack {
         }
     }
 
+    private static boolean isTax(String attack){
+        return attack != null && attack.equals("tax");
+    }
+
 }
